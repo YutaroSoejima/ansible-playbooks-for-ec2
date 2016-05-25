@@ -1,0 +1,13 @@
+- hosts: elasticsearch
+  sudo: true
+  tasks:
+    - name: install elasticsearch
+      yum:
+        name: https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/rpm/elasticsearch/2.3.2/elasticsearch-2.3.2.rpm
+        state: present
+    - name: start elasticsearch
+      service: name=elasticsearch state=started enabled=yes
+    - name: install plugins
+      shell: |
+        sudo bin/plugin install license
+        sudo bin/plugin install analysis-kuromoji
