@@ -11,5 +11,5 @@
     - name: install mongo
       yum: pkg=mongodb-org
     - name: start mongo
-      service: name=mongod state=started
+      service: name=mongod state=started enabled=yes
 
