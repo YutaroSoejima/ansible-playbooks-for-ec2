@@ -9,5 +9,5 @@
       service: name=elasticsearch state=started enabled=yes
     - name: install plugins
       shell: |
-        sudo bin/plugin install license
-        sudo bin/plugin install analysis-kuromoji
+        sudo /usr/share/elasticsearch/bin/plugin install license
+        sudo /usr/share/elasticsearch/bin/plugin install analysis-kuromoji
