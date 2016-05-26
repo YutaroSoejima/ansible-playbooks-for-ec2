@@ -5,9 +5,35 @@
       yum:
         name: https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/rpm/elasticsearch/2.3.2/elasticsearch-2.3.2.rpm
         state: present
-    - name: start elasticsearch
-      service: name=elasticsearch state=started enabled=yes
     - name: install plugins
       shell: |
         sudo /usr/share/elasticsearch/bin/plugin install license
         sudo /usr/share/elasticsearch/bin/plugin install analysis-kuromoji
+        sudo /usr/share/elasticsearch/bin/plugin install delete-by-query
+        sudo /usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head
+    - name: replace ES_HEAP_SIZE of /etc/sysconfig/elasticsearch
+      lineinfile: >-
+        dest='/etc/sysconfig/elasticsearch'
+        state=present
+        regexp='ES_HEAP_SIZE'
+        replace='ES_HEAP_SIZE=31g'
+    - name: replace MAX_LOCKED_MEMORY of /etc/sysconfig/elasticsearch
+      lineinfile: >-
+        dest='/etc/sysconfig/elasticsearch'
+        state=present
+        regexp='MAX_LOCKED_MEMORY'
+        replace='MAX_LOCKED_MEMORY=unlimited'
+    - name: replace bootstrap.mlockall of dest=/etc/elasticsearch/elasticsearch.yml
+      lineinfile: >-
+        dest='/etc/elasticsearch/elasticsearch.yml'
+        state=present
+        regexp='bootstrap.mlockall'
+        replace='bootstrap.mlockall: true'
+    - name: replace network.host of dest=/etc/elasticsearch/elasticsearch.yml
+      lineinfile: >-
+        dest='/etc/elasticsearch/elasticsearch.yml'
+        state=present
+        regexp='network.host'
+        replace='network.host: 0.0.0.0'
+    - name: start elasticsearch
+      service: name=elasticsearch state=started enabled=yes
